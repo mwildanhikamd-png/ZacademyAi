@@ -1,14 +1,42 @@
 import os
+import nest_asyncio
+nest_asyncio.apply()
 
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-import os
-TOKEN = os.getenv("TOKEN")
+# ===============================
+# AMBIL TOKEN DARI RAILWAY
+# ===============================
+TOKEN = os.environ.get("BOT_TOKEN")
 
-async def start(update, context):
+if not TOKEN:
+    raise ValueError("BOT_TOKEN tidak ditemukan di environment variables.")
+
+# ===============================
+# COMMAND: /start
+# ===============================
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bot aktif 🚀")
 
-app = ApplicationBuilder().token(TOKEN).build()
-app.add_handler(CommandHandler("start", start))
+# ===============================
+# COMMAND: /help
+# ===============================
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "ZACADEMY AI BOT\n\n"
+        "Perintah tersedia:\n"
+        "/start - Cek bot aktif\n"
+        "/help - Bantuan"
+    )
 
+# ===============================
+# MAIN APP
+# ===============================
+app = ApplicationBuilder().token(TOKEN).build()
+
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", help_command))
+
+print("Bot running...")
 app.run_polling()
