@@ -1,10 +1,9 @@
 import os
-import nest_asyncio
-nest_asyncio.apply()
 
 from telegram.ext import ApplicationBuilder, CommandHandler
 
-TOKEN = os.environ.get("BOT_TOKEN")
+import os
+TOKEN = os.getenv("TOKEN")
 
 async def start(update, context):
     await update.message.reply_text("Bot aktif 🚀")
